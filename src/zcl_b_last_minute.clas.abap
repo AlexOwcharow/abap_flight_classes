@@ -94,7 +94,6 @@ CLASS zcl_b_last_minute IMPLEMENTATION.
       ENDIF.
 
       IF ls_flight-currency_code = 'USD'.
-        out->write( 'blob' ).
         DATA A TYPE P decimals 2.
         A = '0.96'.
         ls_flight-flight_price = ls_flight-flight_price * A.
@@ -106,6 +105,36 @@ CLASS zcl_b_last_minute IMPLEMENTATION.
         ls_flight-currency_code = 'EUR'.
        ENDIF.
       MODIFY lt_flights FROM ls_flight.
+*      DATA: lv_amount       TYPE p DECIMALS 2,
+*      lv_rate         TYPE p DECIMALS 9,
+*      lv_new_currency TYPE waers.
+*
+*  IF ls_flight-currency_code = 'USD' OR ls_flight-currency_code = 'JPY'.
+*    lv_amount = ls_flight-flight_price.
+*
+*    " Set the target currency
+*    lv_new_currency = 'EUR'.
+*
+*    " Call the currency conversion function
+*    CALL FUNCTION 'CONVERT_TO_LOCAL_CURRENCY'
+*      EXPORTING
+*        foreign_amount              = lv_amount
+*        foreign_currency            = ls_flight-currency_code
+*        local_currency              = lv_new_currency
+*        rate                        = lv_rate
+*        date                        = sy-datum " Conversion date
+*        type_of_rate                = 'M' " Standard market rate
+*      IMPORTING
+*        local_amount                = lv_amount.
+*
+*
+*    IF sy-subrc = 0.
+*      " Update flight details
+*      ls_flight-flight_price = lv_amount.
+*      ls_flight-currency_code = lv_new_currency.
+*      MODIFY lt_flights FROM ls_flight.
+*    ENDIF.
+*  ENDIF.
       ENDLOOP.
 
     " Define a header line

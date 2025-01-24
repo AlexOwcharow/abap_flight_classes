@@ -49,8 +49,7 @@ CLASS zcl_b_customer IMPLEMENTATION.
              terminal        TYPE i,
            END OF ty_booking.
 
-*    DATA lv_start        TYPE c LENGTH 3 VALUE 'FRA'.
-    DATA lv_start        TYPE /dmo/airport_id.
+*
 
     DATA lv_current_date TYPE sy-datum.
     DATA lv_current_time TYPE sy-uzeit.
@@ -64,6 +63,9 @@ CLASS zcl_b_customer IMPLEMENTATION.
     DATA lv_last_name    TYPE /dmo/last_name.
     DATA lv_phone_number TYPE /dmo/phone_number.
     DATA lv_customer_idn TYPE /dmo/customer_id.
+
+*    DATA lv_start        TYPE c LENGTH 3 VALUE 'FRA'.
+    DATA lv_start        TYPE /dmo/airport_id.
 
     " Beispielhafte Customer-ID (hart codiert)
     lv_customer_id = '000001'.
@@ -200,6 +202,7 @@ CLASS zcl_b_customer IMPLEMENTATION.
       " Define a header line
       DATA(lv2_header) = |{ 'Flugdatum' WIDTH = 12 }| &&
                         | { 'Gesellschaft' WIDTH = 12 }| &&
+                        | { 'Verbindung' WIDTH = 10 }| &&
                         | { 'Startflughafen' WIDTH = 13 }| &&
                         | { 'Zielflughafen' WIDTH = 13 }| &&
                         | { 'Abflugzeit' WIDTH = 10 }| &&
@@ -212,11 +215,10 @@ CLASS zcl_b_customer IMPLEMENTATION.
       out->write( lv2_header ).
       " Loop through the data and output each row in a formatted way
       LOOP AT lt2_booking INTO ls2_booking.
-*      DATA(lv_random_number) = cl_abap_random_int=>create( min = 1
-*                                                           max = 50 ).
 
         DATA(lv2_row) = |{ ls2_booking-flight_date DATE = ISO WIDTH = 12 }| &&
                        | { ls2_booking-carrier_id WIDTH = 12 }| &&
+                       | { ls2_booking-connection_id WIDTH = 10 }| &&
                        | { ls2_booking-airport_from_id WIDTH = 14 }| &&
                        | { ls2_booking-airport_to_id WIDTH = 13 }| &&
                        | { ls2_booking-departure_time TIME = ISO WIDTH = 10 }| &&
@@ -255,6 +257,7 @@ CLASS zcl_b_customer IMPLEMENTATION.
       DATA(lv_header) = |{ 'Buchungsdatum' WIDTH = 13 }| &&
                         | { 'Flugdatum' WIDTH = 12 }| &&
                         | { 'Gesellschaft' WIDTH = 12 }| &&
+                        | { 'Verbindung' WIDTH = 10 }| &&
                         | { 'Startflughafen' WIDTH = 13 }| &&
                         | { 'Zielflughafen' WIDTH = 13 }| &&
                         | { 'Abflugzeit' WIDTH = 10 }| &&
@@ -273,6 +276,7 @@ CLASS zcl_b_customer IMPLEMENTATION.
         DATA(lv_row) = |{ ls_booking-booking_date DATE = ISO WIDTH = 13 }| &&
                        | { ls_booking-flight_date DATE = ISO WIDTH = 12 }| &&
                        | { ls_booking-carrier_id WIDTH = 12 }| &&
+                       | { ls_booking-connection_id WIDTH = 10 }| &&
                        | { ls_booking-airport_from_id WIDTH = 14 }| &&
                        | { ls_booking-airport_to_id WIDTH = 13 }| &&
                        | { ls_booking-departure_time TIME = ISO WIDTH = 10 }| &&

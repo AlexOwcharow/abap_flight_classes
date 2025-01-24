@@ -29,13 +29,13 @@ CLASS zcl_b_statbamt IMPLEMENTATION.
 
     DATA lt_flights     TYPE TABLE OF ty_flight.
 
-    DATA lv_pick TYPE i VALUE 1.
+
 
     DATA in_airport_name TYPE /dmo/airport_name.
     DATA in_city TYPE /dmo/city.
     DATA in_country TYPE land1.
 
-
+    DATA lv_pick TYPE i VALUE 2.
 
     IF lv_pick = 0.
       in_airport_name = 'Frankfurt Airport'.
@@ -62,8 +62,7 @@ CLASS zcl_b_statbamt IMPLEMENTATION.
         FROM /dmo/flight AS f
       INNER JOIN /dmo/connection AS c ON f~connection_id = c~connection_id
       INNER JOIN /dmo/airport AS a ON c~airport_from_id = a~airport_id
-      INNER JOIN /dmo/airport as ai ON c~airport_to_id = ai~airport_id
-      WHERE @in_airport_name = a~name OR @in_airport_name = ai~name
+      WHERE @in_airport_name = a~name "OR @in_airport_name = ai~name
             INTO TABLE @lt_flights.
 
     ELSEIF in_city IS NOT INITIAL.
@@ -93,14 +92,12 @@ CLASS zcl_b_statbamt IMPLEMENTATION.
          FROM /dmo/flight AS f
        INNER JOIN /dmo/connection AS c ON f~connection_id = c~connection_id
        INNER JOIN /dmo/airport AS a ON c~airport_from_id = a~airport_id
-       INNER JOIN /dmo/airport ON c~airport_from_id = a~airport_id
        INNER JOIN /dmo/airport as ai ON c~airport_to_id = ai~airport_id
 
        WHERE @in_country = a~country
        OR @in_country = ai~country
              INTO TABLE @lt_flights.
     ENDIF.
-
 
     DATA(lv_header) = |{ 'Flugdatum' WIDTH = 10 }| &&
                   | { 'Fluggesellschaft' WIDTH = 16 }| &&
